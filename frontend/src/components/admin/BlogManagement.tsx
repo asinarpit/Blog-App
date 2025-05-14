@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../../hooks/useAuth';
 import { Link } from 'react-router';
 import { CgSpinner } from 'react-icons/cg';
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 interface Blog {
     _id: string;

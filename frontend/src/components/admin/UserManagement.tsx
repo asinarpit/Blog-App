@@ -20,7 +20,7 @@ interface UserFormData {
     role: 'user' | 'admin';
 }
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 const UserManagement: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
