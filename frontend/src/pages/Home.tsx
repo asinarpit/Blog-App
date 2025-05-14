@@ -230,6 +230,14 @@ const Home: React.FC = () => {
         <div className="min-h-screen max-w-screen-xl mx-auto px-0 sm:px-4 overflow-hidden">
             <HeroSection />
 
+            {error && (
+                <div className="mt-8 px-4">
+                    <div className="bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 p-4 rounded-lg">
+                        {error}
+                    </div>
+                </div>
+            )}
+
             {loading ? (
                 renderSkeletonLoaders()
             ) : (

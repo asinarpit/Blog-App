@@ -3,6 +3,7 @@ import { FiSearch, FiTrash2, FiUserPlus, FiCheck, FiX, FiLoader } from 'react-ic
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { CgSpinner } from 'react-icons/cg';
+import { useAuth } from '../../hooks/useAuth';
 
 interface User {
     _id: string;
@@ -34,8 +35,9 @@ const UserManagement: React.FC = () => {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [userToDelete, setUserToDelete] = useState<string | null>(null);
-    const [isDeleting, setIsDeleting] = useState(false);
+    const [isDeleting, setIsDeleting] = useState<string | null>(null);
     const [editingRoleFor, setEditingRoleFor] = useState<string | null>(null);
+    const { user: currentUser } = useAuth();
 
     const getToken = () => {
         const userJson = localStorage.getItem('user');
@@ -89,18 +91,24 @@ const UserManagement: React.FC = () => {
         }
     };
 
-    const handleDeleteUser = async (userId: string) => {
-        if (window.confirm('Are you sure you want to delete this user?')) {
-            try {
-                await axios.delete(`${API_URL}/api/users/${userId}`, {
-                    headers: { Authorization: `Bearer ${getToken()}` }
-                });
-                toast.success('User deleted successfully');
-                fetchUsers();
-            } catch (error) {
-                console.error('Error deleting user:', error);
-                toast.error('Failed to delete user');
-            }
+    const deleteUser = async (userId: string) => {
+        if (!window.confirm('Are you sure you want to delete this user?')) {
+            return;
+        }
+
+        try {
+            setIsDeleting(userId);
+            await axios.delete(`${API_URL}/api/users/${userId}`, {
+                headers: { Authorization: `Bearer ${currentUser?.token}` }
+            });
+            
+            setUsers(prevUsers => prevUsers.filter(user => user._id !== userId));
+            toast.success('User deleted successfully');
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            toast.error('Failed to delete user. Please try again later.');
+        } finally {
+            setIsDeleting(null);
         }
     };
 
@@ -270,16 +278,16 @@ const UserManagement: React.FC = () => {
                                                         <div className="flex items-center space-x-2">
                                                             <span className="text-xs text-red-500">Confirm?</span>
                                                             <button
-                                                                onClick={() => handleDeleteUser(user._id)}
+                                                                onClick={() => deleteUser(user._id)}
                                                                 className="p-1 rounded text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300"
-                                                                disabled={isDeleting}
+                                                                disabled={isDeleting === user._id}
                                                             >
-                                                                {isDeleting ? <FiLoader className="animate-spin" /> : <FiCheck />}
+                                                                {isDeleting === user._id ? <FiLoader className="animate-spin" /> : <FiCheck />}
                                                             </button>
                                                             <button
                                                                 onClick={() => setUserToDelete(null)}
                                                                 className="p-1 rounded text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
-                                                                disabled={isDeleting}
+                                                                disabled={isDeleting === user._id}
                                                             >
                                                                 <FiX />
                                                             </button>

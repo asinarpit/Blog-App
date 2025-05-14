@@ -11,10 +11,9 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 interface BlogCardProps {
     blog: Blog;
     onLike?: (updatedBlog: Blog) => void;
-    onComment?: (updatedBlog: Blog) => void;
 }
 
-const BlogCard: React.FC<BlogCardProps> = ({ blog, onLike, onComment }) => {
+const BlogCard: React.FC<BlogCardProps> = ({ blog, onLike }) => {
     const navigate = useNavigate();
     const { user } = useAuth();
     const [isLiked, setIsLiked] = useState(user ? blog.likes.includes(user.id) : false);
