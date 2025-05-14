@@ -6,7 +6,6 @@ import SkeletonBlogCard from '../components/SkeletonBlogCard';
 import { FaArrowRight } from 'react-icons/fa';
 import { Link } from 'react-router';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -32,11 +31,11 @@ interface CategorySection {
 }
 
 const Home: React.FC = () => {
-    const [blogs, setBlogs] = useState<Blog[]>([]);
-    const [sections, setSections] = useState<CategorySection[]>([]);
+    const [featuredBlogs, setFeaturedBlogs] = useState<Blog[]>([]);
     const [latestBlogs, setLatestBlogs] = useState<Blog[]>([]);
     const [popularBlogs, setPopularBlogs] = useState<Blog[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [isMobile, setIsMobile] = useState<boolean>(false);
 
     useEffect(() => {
@@ -52,17 +51,10 @@ const Home: React.FC = () => {
     }, []);
 
     const handleUpdatedBlog = (updatedBlog: Blog) => {
-        setBlogs(prev => prev.map(blog => 
+        setFeaturedBlogs(prev => prev.map(blog => 
             blog._id === updatedBlog._id ? updatedBlog : blog
           ));
 
-        setSections(prev => prev.map(section => ({
-            ...section,
-            blogs: section.blogs.map(blog => 
-                blog._id === updatedBlog._id ? updatedBlog : blog
-            )
-        })));
-        
         setLatestBlogs(prev => prev.map(blog => 
             blog._id === updatedBlog._id ? updatedBlog : blog
         ));
@@ -72,13 +64,13 @@ const Home: React.FC = () => {
         ));
     };
 
-    console.log(blogs);
+    console.log(featuredBlogs);
 
     useEffect(() => {
         axios.get<Blog[]>(`${API_BASE_URL}/blog`)
             .then((response) => {
                 const allBlogs = response.data;
-                setBlogs(allBlogs);
+                setFeaturedBlogs(allBlogs);
                 
                 const techBlogs = allBlogs.filter(blog => blog.category === 'tech');
                 const lifestyleBlogs = allBlogs.filter(blog => blog.category === 'lifestyle');
@@ -111,8 +103,6 @@ const Home: React.FC = () => {
                         blogs: healthBlogs.slice(0, 8)
                     }
                 ].filter(section => section.blogs.length > 0);
-                
-                setSections(categorySections);
                 
                 const sortedByDate = [...allBlogs].sort((a, b) => 
                     new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
@@ -211,39 +201,6 @@ const Home: React.FC = () => {
         );
     };
 
-    const renderSection = (section: CategorySection) => {
-        if (section.blogs.length === 0) return null;
-        
-        return (
-            <section key={section.id} className="mb-10 sm:mb-16 px-0 sm:px-0">
-                <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-4 sm:mb-6 px-4">
-                    <div className="mb-3 sm:mb-0">
-                        <h2 className="text-xl sm:text-2xl font-bold text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
-                            {section.title}
-                        </h2>
-                        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
-                            {section.subtitle}
-                        </p>
-                    </div>
-                    <Link 
-                        to={`/blogs?category=${section.id}`}
-                        className="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg
-                            shadow-neumorphic dark:shadow-dark-neumorphic
-                            hover:shadow-neumorphic-inset dark:hover:shadow-dark-neumorphic-inset
-                            transition-shadow duration-300
-                            bg-gray-100 dark:bg-gray-800 
-                            text-gray-600 dark:text-gray-300
-                            text-sm sm:text-base"
-                    >
-                        View All <FaArrowRight className="text-xs sm:text-sm" />
-                    </Link>
-            </div>
-
-                {renderSectionContent(section.blogs, section.id)}
-            </section>
-        );
-    };
-
     return (
         <div className="min-h-screen max-w-screen-xl mx-auto px-0 sm:px-4 overflow-hidden">
             <HeroSection />
@@ -305,35 +262,6 @@ const Home: React.FC = () => {
                         
                         {renderSectionContent(popularBlogs, 'popular')}
                     </section>
-
-                    {sections.map(section => (
-                        <section key={section.id} className="mb-10 sm:mb-16 px-0 sm:px-0">
-                            <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-4 sm:mb-6 px-4">
-                                <div className="mb-3 sm:mb-0">
-                                    <h2 className="text-xl sm:text-2xl font-bold text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
-                                        {section.title}
-                                    </h2>
-                                    <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
-                                        {section.subtitle}
-                                    </p>
-                                </div>
-                                <Link 
-                                    to={`/blogs?category=${section.id}`}
-                                    className="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg
-                                        shadow-neumorphic dark:shadow-dark-neumorphic
-                                        hover:shadow-neumorphic-inset dark:hover:shadow-dark-neumorphic-inset
-                                        transition-shadow duration-300
-                                        bg-gray-100 dark:bg-gray-800 
-                                        text-gray-600 dark:text-gray-300
-                                        text-sm sm:text-base"
-                                >
-                                    View All <FaArrowRight className="text-xs sm:text-sm" />
-                                </Link>
-                            </div>
-                            
-                            {renderSectionContent(section.blogs, section.id)}
-                        </section>
-                    ))}
                 </div>
             )}
         </div>

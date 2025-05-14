@@ -22,14 +22,15 @@ interface Blog {
 interface BlogCardProps {
     blog: Blog;
     onLike?: (updatedBlog: Blog) => void;
+    onComment?: (updatedBlog: Blog) => void;
 }
 
-const BlogCard: React.FC<BlogCardProps> = ({ blog, onLike }) => {
+const BlogCard: React.FC<BlogCardProps> = ({ blog, onLike, onComment }) => {
     const navigate = useNavigate();
     const { user } = useAuth();
     const [isLiked, setIsLiked] = useState(user ? blog.likes.includes(user.id) : false);
-    const [likesCount, setLikesCount] = useState(blog.likes.length);
-    const [commentsCount, setCommentsCount] = useState(blog.comments.length);
+    const [likesCount, setLikesCount] = useState<number>(blog.likes?.length || 0);
+    const [commentsCount, setCommentsCount] = useState<number>(blog.comments?.length || 0);
 
     const formatDate = (dateString?: string) => {
         if (!dateString) return 'Unknown date';

@@ -89,18 +89,18 @@ const UserManagement: React.FC = () => {
         }
     };
 
-    const deleteUser = async (userId: string) => {
-        setIsDeleting(true);
-        try {
-            await axios.delete(`${API_URL}/api/users/${userId}`, getHeaders());
-            toast.success('User deleted successfully');
-            fetchUsers();
-        } catch (error: any) {
-            console.error('Error deleting user:', error);
-            toast.error(error.response?.data?.message || 'Failed to delete user');
-        } finally {
-            setUserToDelete(null);
-            setIsDeleting(false);
+    const handleDeleteUser = async (userId: string) => {
+        if (window.confirm('Are you sure you want to delete this user?')) {
+            try {
+                await axios.delete(`${API_URL}/api/users/${userId}`, {
+                    headers: { Authorization: `Bearer ${getToken()}` }
+                });
+                toast.success('User deleted successfully');
+                fetchUsers();
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                toast.error('Failed to delete user');
+            }
         }
     };
 
@@ -270,7 +270,7 @@ const UserManagement: React.FC = () => {
                                                         <div className="flex items-center space-x-2">
                                                             <span className="text-xs text-red-500">Confirm?</span>
                                                             <button
-                                                                onClick={() => deleteUser(user._id)}
+                                                                onClick={() => handleDeleteUser(user._id)}
                                                                 className="p-1 rounded text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300"
                                                                 disabled={isDeleting}
                                                             >

@@ -9,14 +9,19 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 interface Blog {
   _id: string;
-  image: string;
   title: string;
   content: string;
-  category?: string;
-  slug: string;
+  image?: string;
+  category: string;
+  author: {
+    _id: string;
+    name: string;
+  };
   likes: string[];
-  comments: Array<string>;
-  createdAt?: string;
+  comments: string[];
+  createdAt: string;
+  updatedAt: string;
+  status: string;
 }
 
 const Blogs: React.FC = () => {
