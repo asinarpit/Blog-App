@@ -73,7 +73,7 @@ const UserManagement: React.FC = () => {
     const createUser = async () => {
         setIsSubmitting(true);
         try {
-            const response = await axios.post(
+            await axios.post(
                 `${API_URL}/api/users`, 
                 formData, 
                 getHeaders()
