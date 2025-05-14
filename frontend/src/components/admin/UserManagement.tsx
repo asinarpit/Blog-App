@@ -60,7 +60,7 @@ const UserManagement: React.FC = () => {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`${API_URL}/api/users`, getHeaders());
+            const response = await axios.get(`${API_URL}/users`, getHeaders());
             setUsers(response.data.users);
         } catch (error) {
             console.error('Error fetching users:', error);
@@ -74,7 +74,7 @@ const UserManagement: React.FC = () => {
         setIsSubmitting(true);
         try {
             await axios.post(
-                `${API_URL}/api/users`, 
+                `${API_URL}/users`, 
                 formData, 
                 getHeaders()
             );
@@ -98,7 +98,7 @@ const UserManagement: React.FC = () => {
 
         try {
             setIsDeleting(userId);
-            await axios.delete(`${API_URL}/api/users/${userId}`, {
+            await axios.delete(`${API_URL}/users/${userId}`, {
                 headers: { Authorization: `Bearer ${currentUser?.token}` }
             });
             
@@ -115,7 +115,7 @@ const UserManagement: React.FC = () => {
     const updateUserRole = async (userId: string, newRole: 'user' | 'admin') => {
         try {
             await axios.patch(
-                `${API_URL}/api/users/${userId}/role`, 
+                `${API_URL}/users/${userId}/role`, 
                 { role: newRole }, 
                 getHeaders()
             );

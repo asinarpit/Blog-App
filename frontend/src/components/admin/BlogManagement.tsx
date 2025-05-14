@@ -322,11 +322,11 @@ const BlogManagement: React.FC = () => {
             }
             
             console.log('Using token:', user?.token);
-            console.log(`Using API endpoint: ${API_URL}/api/blog/admin`);
+            console.log(`Using API endpoint: ${API_URL}/blog/admin`);
             
             try {
                 console.log('Attempting to fetch from admin endpoint');
-                const response = await axios.get(`${API_URL}/api/blog/admin`, {
+                const response = await axios.get(`${API_URL}/blog/admin`, {
                     headers: {
                         Authorization: `Bearer ${user?.token}`
                     }
@@ -378,9 +378,9 @@ const BlogManagement: React.FC = () => {
             }
             
             console.log(`Attempting to delete blog`, blogId);
-            console.log(`Using API endpoint: ${API_URL}/api/blog/${blogId}`);
+            console.log(`Using API endpoint: ${API_URL}/blog/${blogId}`);
             
-            await axios.delete(`${API_URL}/api/blog/${blogId}`, {
+            await axios.delete(`${API_URL}/blog/${blogId}`, {
                 headers: {
                     Authorization: `Bearer ${user?.token}`
                 }
@@ -391,7 +391,7 @@ const BlogManagement: React.FC = () => {
         } catch (error) {
             console.error('Error deleting blog:', error);
             console.error('Request details:', {
-                url: `${API_URL}/api/blog/${blogId}`,
+                url: `${API_URL}/blog/${blogId}`,
                 token: user?.token ? 'Token exists' : 'No token',
                 blogId: blogId
             });
@@ -410,9 +410,9 @@ const BlogManagement: React.FC = () => {
             }
             
             console.log(`Attempting to update blog status to ${newStatus}`, blog._id);
-            console.log(`Using API endpoint: ${API_URL}/api/blog/${blog._id}/status`);
+            console.log(`Using API endpoint: ${API_URL}/blog/${blog._id}/status`);
             
-            await axios.patch(`${API_URL}/api/blog/${blog._id}/status`, 
+            await axios.patch(`${API_URL}/blog/${blog._id}/status`, 
                 { status: newStatus },
                 {
                     headers: {
@@ -431,7 +431,7 @@ const BlogManagement: React.FC = () => {
         } catch (error) {
             console.error('Error updating blog status:', error);
             console.error('Request details:', {
-                url: `${API_URL}/api/blog/${blog._id}/status`,
+                url: `${API_URL}/blog/${blog._id}/status`,
                 token: user?.token ? 'Token exists' : 'No token',
                 blogId: blog._id,
                 newStatus: blog.status === 'published' ? 'draft' : 'published'
@@ -461,7 +461,7 @@ const BlogManagement: React.FC = () => {
             console.log('Submitting blog data:', blogData);
             console.log('Image file included:', blogData.image ? 'Yes' : 'No');
             
-            const response = await axios.post(`${API_URL}/api/blog`, formData, {
+            const response = await axios.post(`${API_URL}/blog`, formData, {
                 headers: {
                     Authorization: `Bearer ${user?.token}`,
                     'Content-Type': 'multipart/form-data'
@@ -506,7 +506,7 @@ const BlogManagement: React.FC = () => {
             console.log('Updating blog data:', blogData);
             console.log('Image file included:', blogData.image ? 'Yes' : 'No');
             
-            const response = await axios.put(`${API_URL}/api/blog/${editingBlog._id}`, formData, {
+            const response = await axios.put(`${API_URL}/blog/${editingBlog._id}`, formData, {
                 headers: {
                     Authorization: `Bearer ${user?.token}`,
                     'Content-Type': 'multipart/form-data'

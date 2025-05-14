@@ -78,7 +78,7 @@ const DashboardHome: React.FC = () => {
                 Authorization: `Bearer ${token}`
             };
             
-            const response = await axios.get(`${API_URL}/api/dashboard/stats`, { headers });
+            const response = await axios.get(`${API_URL}/dashboard/stats`, { headers });
             
             if (response.data.success) {
                 setStats(response.data.stats);
