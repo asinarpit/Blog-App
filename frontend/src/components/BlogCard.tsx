@@ -72,13 +72,13 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog, onLike }) => {
     }, [blog._id, user, navigate, onLike]);
 
     return (
-        <div className="h-full rounded-2xl overflow-hidden shadow-neumorphic dark:shadow-dark-neumorphic bg-white dark:bg-gray-800 transition duration-300 hover:shadow-neumorphic-hover dark:hover:shadow-dark-neumorphic-hover z-10 neumorphic-card flex flex-col">
+        <div className="h-full rounded-2xl overflow-hidden shadow-neumorphic dark:shadow-dark-neumorphic bg-white dark:bg-gray-800 transition duration-300 hover:shadow-neumorphic-hover dark:hover:shadow-dark-neumorphic-hover z-10 neumorphic-card flex flex-col group">
             <div className="relative aspect-[16/9] overflow-hidden">
                 {blog.image ? (
                     <img 
                         src={blog.image.startsWith('http') ? blog.image : `${API_BASE_URL}/${blog.image}`} 
                         alt={blog.title} 
-                        className="w-full h-full object-cover transform transition duration-500 hover:scale-110"
+                        className="w-full h-full object-cover transform transition duration-500 group-hover:scale-110"
                     />
                 ) : (
                     <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">

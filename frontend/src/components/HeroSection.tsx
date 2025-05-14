@@ -9,7 +9,7 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="min-h-[90vh] bg-gray-100 dark:bg-gray-800 flex items-center py-6 sm:py-12 px-4 sm:px-6">
+    <section className="min-h-[80vh] sm:min-h-[90vh] bg-gray-100 dark:bg-gray-800 flex items-center py-6 sm:py-12 px-4 sm:px-6">
       <div className="container mx-auto max-w-6xl flex flex-col-reverse md:flex-row items-center gap-6 sm:gap-8 md:gap-12">
 
         <div className="flex-1 text-center md:text-left relative z-10 mt-2 md:mt-0">

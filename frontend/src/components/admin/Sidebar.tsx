@@ -111,7 +111,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
             )}
 
             <div className={`
-                h-screen bg-gray-100 dark:bg-gray-800 z-30
+                h-full bg-gray-100 dark:bg-gray-800 z-30
                 shadow-neumorphic dark:shadow-dark-neumorphic
                 transition-all duration-300
                 flex-shrink-0 w-64
