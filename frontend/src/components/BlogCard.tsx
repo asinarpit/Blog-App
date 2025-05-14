@@ -4,20 +4,9 @@ import { FaHeart, FaRegHeart, FaComment } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../hooks/useAuth';
 import { toast } from 'react-hot-toast';
+import { Blog } from '../types/blog';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-interface Blog {
-    _id: string;
-    title: string;
-    content: string;
-    slug: string,
-    likes: string[];
-    comments: Array<string>;
-    createdAt?: string;
-    category?: string;
-    image?: string;
-}
 
 interface BlogCardProps {
     blog: Blog;
@@ -30,7 +19,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog, onLike, onComment }) => {
     const { user } = useAuth();
     const [isLiked, setIsLiked] = useState(user ? blog.likes.includes(user.id) : false);
     const [likesCount, setLikesCount] = useState<number>(blog.likes?.length || 0);
-    const [commentsCount, setCommentsCount] = useState<number>(blog.comments?.length || 0);
+    const [commentsCount] = useState<number>(blog.comments?.length || 0);
 
     const formatDate = (dateString?: string) => {
         if (!dateString) return 'Unknown date';

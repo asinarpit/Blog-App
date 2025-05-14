@@ -4,25 +4,9 @@ import BlogCard from '../components/BlogCard';
 import { IoMdSearch } from 'react-icons/io';
 import { FaFilter } from 'react-icons/fa';
 import SkeletonBlogCard from '../components/SkeletonBlogCard';
+import { Blog } from '../types/blog';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-interface Blog {
-  _id: string;
-  title: string;
-  content: string;
-  image?: string;
-  category: string;
-  author: {
-    _id: string;
-    name: string;
-  };
-  likes: string[];
-  comments: string[];
-  createdAt: string;
-  updatedAt: string;
-  status: string;
-}
 
 const Blogs: React.FC = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);

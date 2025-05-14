@@ -6,22 +6,11 @@ import SkeletonBlogCard from '../components/SkeletonBlogCard';
 import { FaArrowRight } from 'react-icons/fa';
 import { Link } from 'react-router';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Blog } from '../types/blog';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 console.log(API_BASE_URL);
-
-interface Blog {
-    _id: string;
-    image?: string,
-    title: string;
-    content: string;
-    slug: string,
-    likes: string[];
-    comments: Array<string>;
-    category?: string;
-    createdAt?: string;
-}
 
 interface CategorySection {
     id: string;
@@ -34,6 +23,7 @@ const Home: React.FC = () => {
     const [featuredBlogs, setFeaturedBlogs] = useState<Blog[]>([]);
     const [latestBlogs, setLatestBlogs] = useState<Blog[]>([]);
     const [popularBlogs, setPopularBlogs] = useState<Blog[]>([]);
+    const [sections, setSections] = useState<CategorySection[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isMobile, setIsMobile] = useState<boolean>(false);
@@ -104,8 +94,10 @@ const Home: React.FC = () => {
                     }
                 ].filter(section => section.blogs.length > 0);
                 
+                setSections(categorySections);
+                
                 const sortedByDate = [...allBlogs].sort((a, b) => 
-                    new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+                    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                 );
                 setLatestBlogs(sortedByDate.slice(0, 8));
                 
@@ -116,6 +108,7 @@ const Home: React.FC = () => {
             })
             .catch(error => {
                 console.error("Error fetching blogs: ", error);
+                setError("Failed to load blogs");
                 setLoading(false);
             });
     }, []);
@@ -173,9 +166,9 @@ const Home: React.FC = () => {
         };
     };
 
-    const renderSectionContent = (sectionBlogs: Blog[], sectionId: string) => {
+    const renderSectionContent = (sectionBlogs: Blog[]) => {
         if (isMobile) {
-    return (
+            return (
                 <div className="neumorphic-swiper-container mb-4 px-4">
                     <Swiper
                         spaceBetween={20}
@@ -184,7 +177,7 @@ const Home: React.FC = () => {
                     >
                         {sectionBlogs.map((blog) => (
                             <SwiperSlide key={blog._id}>
-                        <BlogCard blog={blog} onLike={handleUpdatedBlog} />
+                                <BlogCard blog={blog} onLike={handleUpdatedBlog} />
                             </SwiperSlide>
                         ))}
                     </Swiper>
@@ -198,6 +191,38 @@ const Home: React.FC = () => {
                     <BlogCard key={blog._id} blog={blog} onLike={handleUpdatedBlog} />
                 ))}
             </div>
+        );
+    };
+
+    const renderSection = (section: CategorySection) => {
+        if (section.blogs.length === 0) return null;
+        
+        return (
+            <section key={section.id} className="mb-10 sm:mb-16 px-0 sm:px-0">
+                <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-4 sm:mb-6 px-4">
+                    <div className="mb-3 sm:mb-0">
+                        <h2 className="text-xl sm:text-2xl font-bold text-gray-700 dark:text-gray-300 mb-1 sm:mb-2">
+                            {section.title}
+                        </h2>
+                        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+                            {section.subtitle}
+                        </p>
+                    </div>
+                    <Link 
+                        to={`/blogs?category=${section.id}`}
+                        className="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg
+                            shadow-neumorphic dark:shadow-dark-neumorphic
+                            hover:shadow-neumorphic-inset dark:hover:shadow-dark-neumorphic-inset
+                            transition-shadow duration-300
+                            bg-gray-100 dark:bg-gray-800 
+                            text-gray-600 dark:text-gray-300
+                            text-sm sm:text-base"
+                    >
+                        View All <FaArrowRight className="text-xs sm:text-sm" />
+                    </Link>
+                </div>
+                {renderSectionContent(section.blogs)}
+            </section>
         );
     };
 
@@ -232,8 +257,7 @@ const Home: React.FC = () => {
                                 View All <FaArrowRight className="text-xs sm:text-sm" />
                             </Link>
                         </div>
-                        
-                        {renderSectionContent(latestBlogs, 'latest')}
+                        {renderSectionContent(latestBlogs)}
                     </section>
 
                     <section className="mb-10 sm:mb-16 px-0 sm:px-0">
@@ -259,9 +283,11 @@ const Home: React.FC = () => {
                                 View All <FaArrowRight className="text-xs sm:text-sm" />
                             </Link>
                         </div>
-                        
-                        {renderSectionContent(popularBlogs, 'popular')}
+                        {renderSectionContent(popularBlogs)}
                     </section>
+
+                    {/* Category Sections */}
+                    {sections.map(section => renderSection(section))}
                 </div>
             )}
         </div>
