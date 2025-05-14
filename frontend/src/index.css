@@ -1,0 +1,52 @@
+@import './styles/swiper.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.neumorphic-swiper-container {
+  margin: 0;
+  position: relative;
+  width: 100%;
+  padding: 10px 0;
+}
+
+.neumorphic-swiper-container .swiper {
+  width: 100%;
+  overflow: visible !important;
+}
+
+html, body {
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.neumorphic-card {
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.1), 
+              -6px -6px 12px rgba(255, 255, 255, 0.8), 
+              0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+}
+
+.dark .neumorphic-card {
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.5), 
+              -6px -6px 12px rgba(60, 60, 60, 0.2), 
+              0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+  
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+  
+.animate-float-delayed {
+    animation: float 6s ease-in-out 1s infinite;
+}
+
+body{
+    @apply bg-gray-100 dark:bg-gray-800
+}
